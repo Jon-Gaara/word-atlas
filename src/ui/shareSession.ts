@@ -1,4 +1,5 @@
 import type { Atlas } from "../atlas/types";
+import { shareFile } from "../lib/native";
 import { sessionStats } from "../store/session";
 import { Rating } from "../store/srs";
 import type { ActiveSession } from "../store/store";
@@ -79,6 +80,7 @@ export async function shareSession(atlas: Atlas, s: ActiveSession) {
     const blob = await new Promise<Blob | null>((r) => c.toBlob(r, "image/png"));
     if (!blob) throw new Error();
     const file = new File([blob], `word-atlas-${d.toISOString().slice(0, 10)}.png`, { type: "image/png" });
+    if (await shareFile(blob, file.name, "今日学习")) return;
     if (navigator.canShare?.({ files: [file] })) {
       await navigator.share({ files: [file] }).catch(() => null);
       return;

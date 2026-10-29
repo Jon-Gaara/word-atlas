@@ -9,3 +9,15 @@ output/
 .DS_Store
 .playwright-cli/
 *.tsbuildinfo
+.idea/
+*.iml
+
+# Android shell: build output and the web assets copied by `cap sync`
+android/app/build/
+android/.gradle/
+android/build/
+android/local.properties
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json
+android/capacitor-cordova-android-plugins/

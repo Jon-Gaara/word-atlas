@@ -11,7 +11,9 @@ export function transition(update: () => void) {
     update();
     return;
   }
-  d.startViewTransition(() => flushSync(update));
+  // A transition is skipped when the viewport resizes mid-flight (Android WebView
+  // does this while the safe-area insets settle), which rejects `finished`.
+  d.startViewTransition(() => flushSync(update)).finished.catch(() => {});
 }
 
 /** Morph an element (e.g. a gallery tile's illustration) into the word card. */
@@ -26,5 +28,7 @@ export function morphFrom(el: HTMLElement | null | undefined, update: () => void
     el.style.viewTransitionName = "";
     flushSync(update);
   });
-  t.finished.finally(() => (el.style.viewTransitionName = ""));
+  t.finished
+    .catch(() => {})
+    .finally(() => (el.style.viewTransitionName = ""));
 }

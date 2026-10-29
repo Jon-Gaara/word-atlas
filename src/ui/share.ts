@@ -1,4 +1,5 @@
 import type { Atlas, Entry } from "../atlas/types";
+import { shareFile } from "../lib/native";
 import { toast } from "./Toast";
 
 const SERIF = '"Fraunces Variable", "Songti SC", "Noto Serif SC", Georgia, serif';
@@ -120,6 +121,7 @@ export async function shareWord(atlas: Atlas, e: Entry) {
     const blob = await new Promise<Blob | null>((r) => canvas.toBlob(r, "image/png"));
     if (!blob) throw new Error("no blob");
     const file = new File([blob], `word-atlas-${e.id}.png`, { type: "image/png" });
+    if (await shareFile(blob, file.name, e.w)) return;
     if (navigator.canShare?.({ files: [file] })) {
       await navigator.share({ files: [file], title: e.w }).catch(() => null);
       return;

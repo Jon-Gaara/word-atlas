@@ -528,6 +528,14 @@ code {
   display: flex;
   flex-direction: column;
 }
+
+/* Android shell: the WebView runs edge-to-edge, so reserve the status bar. */
+html.is-native {
+  --top: calc(68px + env(safe-area-inset-top));
+}
+html.is-native .topbar {
+  padding-top: env(safe-area-inset-top);
+}
 .main {
   flex: 1;
   width: 100%;

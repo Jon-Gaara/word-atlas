@@ -1,3 +1,4 @@
+import { shareFile } from "../lib/native";
 import { toast } from "../ui/Toast";
 
 const SERIF = '"Fraunces Variable", "Songti SC", "Noto Serif SC", Georgia, serif';
@@ -48,6 +49,7 @@ export async function shareGalaxy(source: HTMLCanvasElement, lit: number, total:
     const blob = await new Promise<Blob | null>((r) => c.toBlob(r, "image/png"));
     if (!blob) throw new Error("no blob");
     const file = new File([blob], "word-atlas-galaxy.png", { type: "image/png" });
+    if (await shareFile(blob, file.name, "我的词汇星图")) return;
     if (navigator.canShare?.({ files: [file] })) {
       await navigator.share({ files: [file] }).catch(() => null);
       return;

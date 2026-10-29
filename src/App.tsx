@@ -5,6 +5,7 @@ import { loadOpenAtlas, loadPrivateAtlas } from "./atlas/data";
 import type { Atlas } from "./atlas/types";
 import { REPO_URL } from "./config";
 import { closeWord, currentLocation, go, openWord, useLocation, type Route } from "./lib/router";
+import { onBack, syncStatusBar } from "./lib/native";
 import { AtlasPage } from "./pages/Atlas";
 import { About } from "./pages/About";
 import { Learn } from "./pages/Learn";
@@ -37,6 +38,7 @@ function useTheme() {
     else root.setAttribute("data-theme", theme);
     const dark = theme === "dark" || (theme === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
     document.querySelector('meta[name="theme-color"]')?.setAttribute("content", dark ? "#0D1120" : "#F6F1E7");
+    void syncStatusBar(dark);
   }, [theme]);
   return theme;
 }
@@ -118,6 +120,27 @@ function Shell({ privateAvailable }: { privateAvailable: boolean }) {
   useEffect(() => {
     if (!word) window.scrollTo({ top: 0 });
   }, [route.page]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Android back: close the search palette, then the word sheet, then leave the page.
+  useEffect(
+    () =>
+      onBack(() => {
+        if (palette) {
+          setPalette(false);
+          return true;
+        }
+        if (word) {
+          closeWord();
+          return true;
+        }
+        if (route.page !== "today") {
+          go({ page: "today" });
+          return true;
+        }
+        return false;
+      }),
+    [palette, word, route.page],
+  );
 
   const dark = theme === "dark" || (theme === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
 

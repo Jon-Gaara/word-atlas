@@ -1,6 +1,7 @@
 import { Download, RotateCcw, Upload } from "lucide-react";
 import { useMemo, useRef } from "react";
 import { useAtlas } from "../atlas/context";
+import { shareFile } from "../lib/native";
 import { isMastered } from "../store/srs";
 import { dayKey, exportBackup, importBackup, resetProgress, store, useStore, type Settings } from "../store/store";
 import { toast } from "../ui/Toast";
@@ -33,11 +34,16 @@ export function Me({ privateAvailable }: { privateAvailable: boolean }) {
   }, [progress]);
 
   const set = (patch: Partial<Settings>) => store.settings(patch);
-  const download = () => {
+  const download = async () => {
     const blob = new Blob([exportBackup()], { type: "application/json" });
+    const name = `word-atlas-backup-${dayKey()}.json`;
+    if (await shareFile(blob, name, "词光学习进度备份")) {
+      toast("已打开分享面板，选「文件」即可保存备份", "ok");
+      return;
+    }
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = `word-atlas-backup-${dayKey()}.json`;
+    a.download = name;
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 2000);
   };

@@ -8,7 +8,7 @@
 
 7,298 个雅思词条 · 原创插画 · 英美发音 · FSRS 间隔复习
 
-[**立即体验 ↗**](https://0xlei.tech/words/)　 /　 [48 秒介绍](docs/assets/launch.mp4)　 /　 [下载词库](data/)　 /　 [English](README.en.md)
+[**立即体验 ↗**](https://0xlei.tech/words/)　 /　 [48 秒介绍](docs/assets/launch.mp4)　 /　 [下载安卓包](docs/android.md)　 /　 [下载词库](data/)　 /　 [English](README.en.md)
 
 [![Code: MIT](https://img.shields.io/badge/Code-MIT-17283B?style=flat-square)](LICENSE)
 [![Dataset: CC BY 4.0](https://img.shields.io/badge/Dataset-CC_BY_4.0-AD5038?style=flat-square)](CONTENT_LICENSE.md)
@@ -123,6 +123,16 @@ npm run build        # 构建到 dist/
 ```
 
 子路径部署：`ATLAS_BASE=/words/ npm run build`。完整说明见 [部署文档](docs/deployment.md)。
+
+### 安卓 App
+
+仓库也能直接打出 Android 安装包，插画、发音和音效全部打包进 APK，装好后完全离线：
+
+```bash
+npm run android:apk        # 产物：android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+不想装 Android SDK，就在 GitHub **Actions → Android APK → Run workflow** 一键构建，跑完到 **Releases → 词光 APK 最新构建** 下载 `app-debug.apk`（每次运行会覆盖这个 release）。包名、签名、体积等细节见 [安卓打包文档](docs/android.md)。
 
 **技术栈**：React 19 · TypeScript · Vite · ts-fsrs · WebGL2
 

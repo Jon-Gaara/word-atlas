@@ -96,6 +96,16 @@ npm run build        # Production build in dist/
 
 For a subpath deployment: `ATLAS_BASE=/words/ npm run build`. See the [deployment guide](docs/deployment.md).
 
+### Android app
+
+The repository also builds a sideloadable Android APK with every illustration, pronunciation and sound bundled in, so the app runs fully offline:
+
+```bash
+npm run android:apk        # android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+No Android SDK on your machine? Run GitHub **Actions → Android APK → Run workflow**, then download `app-debug.apk` from **Releases → 词光 APK 最新构建** (each run replaces that release). Details in the [Android guide](docs/android.md).
+
 **Stack:** React 19 · TypeScript · Vite · ts-fsrs · WebGL2
 
 ## Open dataset

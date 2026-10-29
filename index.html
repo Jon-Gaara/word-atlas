@@ -26,6 +26,11 @@
           if (s.theme) t = s.theme;
         } catch (e) {}
         if (t !== "system") document.documentElement.setAttribute("data-theme", t);
+        // Android shell runs edge-to-edge; reserve the status bar before first paint.
+        try {
+          if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform())
+            document.documentElement.classList.add("is-native");
+        } catch (e) {}
       })();
     </script>
   </head>

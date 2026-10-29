@@ -2,6 +2,8 @@
 
 `npm run build` 生成纯静态站点 `dist/`，可以放到任何静态托管（Nginx、Cloudflare Pages、Vercel、GitHub Pages）。
 
+安卓安装包（离线版）见 [安卓打包文档](android.md)，用 `npm run android:apk` 或 GitHub Actions 构建。
+
 ## 子路径
 
 ```bash

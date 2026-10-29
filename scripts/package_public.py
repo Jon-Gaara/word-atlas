@@ -22,8 +22,9 @@ ROOT = Path(__file__).resolve().parents[1]
 TOP = {
     "README.md", "README.en.md", "LICENSE", "CONTENT_LICENSE.md", "CONTRIBUTING.md", "SECURITY.md",
     ".gitignore", "package.json", "package-lock.json", "tsconfig.json", "vite.config.ts", "index.html",
+    "capacitor.config.ts", ".gitattributes",
 }
-SCRIPTS = {"check-atlas.mjs", "render-cards.mjs", "record-demo.mjs", "package_public.py"}
+SCRIPTS = {"check-atlas.mjs", "render-cards.mjs", "record-demo.mjs", "package_public.py", "android-apk.mjs", "android-icons.py"}
 ATLAS_SCRIPTS = {"common.py", "gen_text.py", "gen_images.py", "gen_brand.py", "gen_word_audio.py", "gen_sentence_audio.py", "gen_sfx.py", "gen_galaxy_audio.sh", "fix_blocked.py", "build_atlas.py", "build_sfx.py"}
 TEXT = {".ts", ".tsx", ".css", ".svg", ".md", ".json", ".mjs", ".js", ".py", ".html", ".csv", ".yml", ".webmanifest", ""}
 PATTERNS = {
@@ -51,8 +52,22 @@ def allowed(rel: Path) -> bool:
         return (len(p) == 2 and rel.suffix == ".md") or (len(p) == 3 and p[1] == "assets" and rel.suffix in {".jpg", ".png", ".gif", ".webp", ".mp4"})
     if p[0] == "data":
         return len(p) == 2 and p[1] in {"word-atlas.json", "word-atlas.csv", "README.md"}
-    if name in {".github/workflows/check.yml", ".github/workflows/pages.yml"}:
+    if name in {".github/workflows/check.yml", ".github/workflows/pages.yml", ".github/workflows/android.yml"}:
         return True
+    if p[0] == "android":
+        # The native project, never the built output or the copied web assets.
+        inner = p[1:]
+        if any(x in {"build", ".gradle", ".idea", "assets", "public"} for x in inner):
+            return False
+        if len(inner) == 1:
+            return inner[0] in {"build.gradle", "settings.gradle", "variables.gradle", "gradle.properties", "gradlew", "gradlew.bat", ".gitignore"}
+        if inner[0] == "gradle" and len(inner) == 3 and inner[1] == "wrapper":
+            return inner[2] in {"gradle-wrapper.properties", "gradle-wrapper.jar"}
+        if inner[0] == "app" and len(inner) >= 2:
+            if inner[1] in {"build.gradle", "proguard-rules.pro"}:
+                return True
+            return inner[1:3] == ["src", "main"] and rel.suffix in {".java", ".xml", ".png", ".properties"}
+        return False
     if p[0] == "public":
         inner = p[1:]
         if len(inner) == 1:
